@@ -42,7 +42,7 @@ library(dplyr)
 # Pour la suite de l'exercice, nous allons utiliser des données sur la tuberculose de l'OMS.
 # Elles proviennent de microdonnées sur chaque cas de tuberculose confirmé, incluant l'année, le pays, et le sexe.
 
-tb_data = read.csv("5_Préparation_Données\\donnees\\tb.csv", stringsAsFactors = F, header = T)
+tb_data <- read.csv("5_Préparation_Données\\donnees\\tb.csv", stringsAsFactors = F, header = T)
 
 
 
@@ -51,11 +51,12 @@ summary(tb_data)  # quelques statistiques descriptives
 str(tb_data)      # la structre des données (type, et quelques valeurs)
 colnames(tb_data) # le nom des variables
 
-counts <- table(tb_data$pays) # variable créée pour faire un diagramme à barre (nb de cas par pays)
+counts <- table(tb_data$sexe) # variable créée pour faire un diagramme à barre (nb de cas par pays)
 
-hist(tb_data$enfants) #Nombre de nouveaux cas pour les personnes âgées de 0 à 14 ans
+hist(tb_data$enfants, breaks = 50, xlab = "Enfants") #Nombre de nouveaux cas pour les personnes âgées de 0 à 14 ans
 hist(tb_data$adultes) #Nombre de nouveaux cas pour les personnes âgées de 15 à 64 ans
 hist(tb_data$pers_agees) #Nombre de nouveaux cas pour les personnes âgées de plus de 64 ans
+
 hist(tb_data$pers_agees[tb_data$pers_agees<20000]) 
    
 
@@ -93,39 +94,39 @@ cas_adultes = arrange(cas_adultes, desc(adultes), enfants)
 # La fonction mutate() créé une nouvelle variable. Revenons à la base de données complète des cas 
 # de tuberculose et ajoutons une variable qui est le total des cas
 
-tb_data = mutate(tb_data, total = adult + child + elderly)
+tb_data = mutate(tb_data, total = adultes + enfants + pers_agees)
 # simple, non?
 
 # on peut créer plusieurs variables d'un seul coup, il suffit de les séparer par une virgule
 tb_data = mutate(tb_data, 
-  adult_scaled = adult/5*9, 
-  means_cases = mean(adult, na.rm = T)) # rappel: l'option na.rm indique si l'on veut retirer les valeurs
+                 adultes_2 = adultes/5*9, 
+                 moyenne = mean(adultes, na.rm = T)) # rappel: l'option na.rm indique si l'on veut retirer les valeurs
                                         # manquantes d'un calcul. Par défaut, elles sont conservées... mais ça
                                         # va retourner une erreur puisque R ne peut calculer une moyenne, par exemple,
                                         # avec des valeurs manquantes. 
                                         # na.rm ---> NA REMOVE
 
 
-tb_data = mutate(tb_data, all_sum = sum(adult, child, elderly, na.rm = T))
+tb_data = mutate(tb_data, somme = sum(adultes, enfants, pers_agees, na.rm = T))
   # une autre manière d'obtenir le total, en utilisant la fonction sum() (remarquez par contre l'option na.rm!)
 
 
 # La fonction summarise() permet d'obtenir les statistiques descriptives de notre choix.
 # Les résultats seront affichés dans la console.
 # Exemple 1:Quel est le nombre moyen de cas pour les adultes?
-summarise(tb_data, mean_adult = mean(adult, na.rm = T))
+summarise(tb_data, moyenne_adultes = mean(adultes, na.rm = T))
 # Exemple 2: Quel est le nombre moyen de cas pour les adultes, ainsi que l'écart-type ("standard deviation")?
 summarise(tb_data, 
-  mean_adult = mean(adult, na.rm =T), 
-  sd = sd(adult, na.rm =T))
+  moyenne_adultes = mean(adultes, na.rm =T), 
+  ecart_type = sd(adultes, na.rm =T))
 # Exemple 3: nombre de pays, moyenne des adultes, nombre total d'observations, nombre de valeurs manquantes
   # pour les audltes, nombres de valeurs non-manquantes pour les adultes.
 summarise(tb_data, 
-  country_count = n_distinct(country), 
-  mean = mean(adult, na.rm = T), 
+  compte_pays = n_distinct(pays), 
+  moyenne = mean(adultes, na.rm = T), 
   n = n(), 
-  miss = sum(is.na(adult) ), 
-  not_missing = sum(!is.na(adult)) )
+  manquant = sum(is.na(adultes) ), 
+  non_manquant = sum(!is.na(adultes)) )
 
 
 
