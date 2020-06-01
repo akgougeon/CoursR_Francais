@@ -37,7 +37,6 @@ tb_data <- read.csv("5_Préparation_Données\\donnees\\tb.csv", stringsAsFactors =
 # Naviguez jusqu'à celle qui vous intéresse, et faites TAB de nouveau. Voilà, vous vous épargnez de quelques à
 # plusieurs touches :)
 
-
 # Revenons à notre passeur. Ici, nous créerons une nouvelle base de données nommée tb_data2.
 # Nous prendrons la base de données tb_data, la passons à la fonction mutate qui elle
 # créera une variable nommée "total" qui sera le nombre total de cas pour l'année. Nous passerons ensuite ce résultat
@@ -46,8 +45,8 @@ tb_data <- read.csv("5_Préparation_Données\\donnees\\tb.csv", stringsAsFactors =
 
 library(dplyr)
 
-tb_data2 = tb_data %>% mutate(total = enfants + adultes + pers_agees) %>% 
-        filter(total == "2000"  &  pays  == "Yemen")  # Vous pouvez utiliser un opérateur logique (ici: &),
+tb_data2 <- tb_data %>% mutate(total = enfants + adultes + pers_agees) %>% 
+        filter(annee == "2000"  &  pays  == "Yemen")  # Vous pouvez utiliser un opérateur logique (ici: &),
                                                         # ou faire ceci en deux étapes distinctes (voir ci-bas)
 
 
